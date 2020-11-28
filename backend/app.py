@@ -16,7 +16,7 @@ db = MongoEngine()
 db.init_app(app)
 
 class Todo(db.Document):
-    title = db.StringField(max_length=60)
+    name = db.StringField(max_length=60)
     text = db.StringField()
     done = db.BooleanField(default=False)
     pub_date = db.DateTimeField(default=datetime.datetime.now)
@@ -24,38 +24,38 @@ class Todo(db.Document):
 @app.route("/api/test", methods = ['GET'])
 def index(): 
     Todo.objects().delete()
-    Todo(title="Simple todo A", text="12345678910").save()
-    Todo(title="Simple todo B", text="12345678910").save()
-    Todo.objects(title__contains="B").update(set__text="Hello world")
+    Todo(name="Simple todo A", text="12345678910").save()
+    Todo(name="Simple todo B", text="12345678910").save()
+    Todo.objects(name__contains="B").update(set__text="Hello world")
     todos = Todo.objects().to_json()
     return Response(todos, mimetype="application/json", status=200)
 
-@app.route("/api/<title>/<text>/", methods = ['PUT'])
-def create(title,text):
-    Todo(title=title, text=text).save()
+@app.route("/api/<name>/<text>/", methods = ['PUT'])
+def create(name,text):
+    Todo(name=name, text=text).save()
     todos = Todo.objects().to_json()
     return Response(todos, mimetype="application/json", status=200)
 
-@app.route("/api/<title>", methods = ['GET'])
-def read(title):
-    todos = Todo..objects(title=title).first().to_json()
+@app.route("/api/<name>", methods = ['GET'])
+def read(name):
+    todos = Todo..objects(name=name).first().to_json()
     return Response(todos, mimetype="application/json", status=200)
 
 @app.route("/api/all", methods = ['GET'])
-def read(title):
+def read(name):
     ttodos = Todo.objects().to_json()
     return Response(todos, mimetype="application/json", status=200)
 
 
-@app.route("/api/<title>/<text>/", methods = ['POST'])
-def update(title,text):
-    Todo.objects(title__contains=title).update(set__text=text)
+@app.route("/api/<name>/<text>/", methods = ['POST'])
+def update(name,text):
+    Todo.objects(name__contains=name).update(set__text=text)
     todos = Todo.objects().to_json()
     return Response(todos, mimetype="application/json", status=200)
 
-@app.route("/api/<title>", methods = ['DELETE'])
-def delete(title,text):
-    Todo..objects(title=title).first().delete()
+@app.route("/api/<name>", methods = ['DELETE'])
+def delete(name,text):
+    Todo..objects(name=name).first().delete()
     todos = Todo.objects().to_json()
     return Response(todos, mimetype="application/json", status=200)
 
