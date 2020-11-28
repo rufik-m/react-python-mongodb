@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const MESSAGE_API_BASE_URL = "http://localhost:5000/api/";
+const MESSAGE_API_BASE_URL = "http://localhost:3000/api";
 
 class MessageService {
 

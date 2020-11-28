@@ -15,49 +15,41 @@ app.config['MONGODB_SETTINGS'] = {
 db = MongoEngine()
 db.init_app(app)
 
-class Todo(db.Document):
+class Message(db.Document):
     name = db.StringField(max_length=60)
     text = db.StringField()
     done = db.BooleanField(default=False)
     pub_date = db.DateTimeField(default=datetime.datetime.now)
 
-@app.route("/api/test", methods = ['GET'])
-def index(): 
-    Todo.objects().delete()
-    Todo(name="Simple todo A", text="12345678910").save()
-    Todo(name="Simple todo B", text="12345678910").save()
-    Todo.objects(name__contains="B").update(set__text="Hello world")
-    todos = Todo.objects().to_json()
-    return Response(todos, mimetype="application/json", status=200)
-
-@app.route("/api/<name>/<text>/", methods = ['PUT'])
+@app.route("/api, methods = ['POST'])
 def create(name,text):
-    Todo(name=name, text=text).save()
-    todos = Todo.objects().to_json()
-    return Response(todos, mimetype="application/json", status=200)
+    message = request.json
+    Message(name=message['name'], text=message['text']).save()
+    messages = Message.objects().to_json()
+    return Response(messages, mimetype="application/json", status=200)
 
 @app.route("/api/<name>", methods = ['GET'])
 def read(name):
-    todos = Todo..objects(name=name).first().to_json()
-    return Response(todos, mimetype="application/json", status=200)
+    messages = Message.objects(name=name).first().to_json()
+    return Response(messages, mimetype="application/json", status=200)
 
 @app.route("/api/all", methods = ['GET'])
 def read(name):
-    ttodos = Todo.objects().to_json()
-    return Response(todos, mimetype="application/json", status=200)
+    tmessages = Message.objects().to_json()
+    return Response(messages, mimetype="application/json", status=200)
 
 
-@app.route("/api/<name>/<text>/", methods = ['POST'])
+@app.route("/api/<messageId>/", methods = ['PUT'])
 def update(name,text):
-    Todo.objects(name__contains=name).update(set__text=text)
-    todos = Todo.objects().to_json()
-    return Response(todos, mimetype="application/json", status=200)
+    Message.objects(name__contains=message['name']).update(set__name=message['name'], set__text=message['text'])
+    messages = Message.objects().to_json()
+    return Response(messages, mimetype="application/json", status=200)
 
-@app.route("/api/<name>", methods = ['DELETE'])
+@app.route("/api/<messageId>", methods = ['DELETE'])
 def delete(name,text):
-    Todo..objects(name=name).first().delete()
-    todos = Todo.objects().to_json()
-    return Response(todos, mimetype="application/json", status=200)
+    Message..objects(name=name).first().delete()
+    messages = Message.objects().to_json()
+    return Response(messages, mimetype="application/json", status=200)
 
 if __name__ == "__main__": 
     app.run(debug=True, port=5000)
