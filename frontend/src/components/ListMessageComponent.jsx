@@ -48,9 +48,10 @@ class ListMessageComponent extends Component {
 
                             <thead>
                                 <tr>
-                                    <th> Message First Name</th>
-                                    <th> Message Last Name</th>
-                                    <th> Message Email Id</th>
+                                    <th> Message Id</th>
+                                    <th> Message Name</th>
+                                    <th> Message Text</th>
+                                    <th> Message Publish Date</th>
                                     <th> Actions</th>
                                 </tr>
                             </thead>
@@ -58,14 +59,15 @@ class ListMessageComponent extends Component {
                                 {
                                     this.state.messages.map(
                                         message => 
-                                        <tr key = {message.id}>
-                                             <td> { message.firstName} </td>   
-                                             <td> {message.lastName}</td>
-                                             <td> {message.emailId}</td>
+                                        <tr key = {message._id.$oid}>
+                                             <td> {message._id.$oid} </td>  
+                                             <td> {message.name} </td>    
+                                             <td> {message.text}</td>
+                                           
                                              <td>
-                                                 <button onClick={ () => this.editMessage(message.id)} className="btn btn-info">Update </button>
-                                                 <button style={{marginLeft: "10px"}} onClick={ () => this.deleteMessage(message.id)} className="btn btn-danger">Delete </button>
-                                                 <button style={{marginLeft: "10px"}} onClick={ () => this.viewMessage(message.id)} className="btn btn-info">View </button>
+                                                 <button onClick={ () => this.editMessage(message._id.$oid)} className="btn btn-info">Update </button>
+                                                 <button style={{marginLeft: "10px"}} onClick={ () => this.deleteMessage(message._id.$oid)} className="btn btn-danger">Delete </button>
+                                                 <button style={{marginLeft: "10px"}} onClick={ () => this.viewMessage(message._id.$oid)} className="btn btn-info">View </button>
                                              </td>
                                         </tr>
                                     )

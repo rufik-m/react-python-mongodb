@@ -21,33 +21,39 @@ class Message(db.Document):
     done = db.BooleanField(default=False)
     pub_date = db.DateTimeField(default=datetime.datetime.now)
 
-@app.route("/api, methods = ['POST'])
-def create(name,text):
+@app.route("/api", methods = ['POST'])
+def create():
     message = request.json
     Message(name=message['name'], text=message['text']).save()
     messages = Message.objects().to_json()
     return Response(messages, mimetype="application/json", status=200)
 
-@app.route("/api/<name>", methods = ['GET'])
-def read(name):
-    messages = Message.objects(name=name).first().to_json()
+@app.route("/api/query/<key>/<value>", methods = ['GET'])
+def query(key, value):
+    messages = Message.objects.get_or_404(key=value).to_json()
     return Response(messages, mimetype="application/json", status=200)
 
-@app.route("/api/all", methods = ['GET'])
-def read(name):
-    tmessages = Message.objects().to_json()
+@app.route("/api", methods = ['GET'])
+def readAll():
+    messages = Message.objects().to_json()
+    return Response(messages, mimetype="application/json", status=200)
+
+@app.route("/api/<messageId>", methods = ['GET'])
+def read(messageId):
+    messages = Message.objects.get_or_404(id=messageId).to_json()
     return Response(messages, mimetype="application/json", status=200)
 
 
-@app.route("/api/<messageId>/", methods = ['PUT'])
-def update(name,text):
-    Message.objects(name__contains=message['name']).update(set__name=message['name'], set__text=message['text'])
+@app.route("/api/<messageId>", methods = ['PUT'])
+def update(messageId):
+    message = request.json
+    Message.objects.get_or_404(id=messageId).update(set__name=message['name'], set__text=message['text'])
     messages = Message.objects().to_json()
     return Response(messages, mimetype="application/json", status=200)
 
 @app.route("/api/<messageId>", methods = ['DELETE'])
-def delete(name,text):
-    Message..objects(name=name).first().delete()
+def delete(messageId):
+    Message.objects.get_or_404(id=messageId).delete()
     messages = Message.objects().to_json()
     return Response(messages, mimetype="application/json", status=200)
 
