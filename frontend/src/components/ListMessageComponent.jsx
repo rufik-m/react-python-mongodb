@@ -15,7 +15,7 @@ class ListMessageComponent extends Component {
 
     deleteMessage(id){
         MessageService.deleteMessage(id).then( res => {
-            this.setState({messages: this.state.messages.filter(message => message.id !== id)});
+            this.setState({messages: this.state.messages.filter(message => message._id.$oid !== id)});
         });
     }
     viewMessage(id){
